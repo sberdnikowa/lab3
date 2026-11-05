@@ -3,7 +3,8 @@
 Сборка и запуск из папки проекта:
 
 ```sh
-make
+mkdir -p build
+cc -std=c11 -Wall -Wextra -Wpedantic main.c ships_input.c slopeforships.c input_and_prove.c danger_signal.c -o build/lab3
 ./build/lab3
 ```
 
