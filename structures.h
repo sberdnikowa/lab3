@@ -1,3 +1,6 @@
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
+
 struct coordinates { 
     int degree;
     int minute;
@@ -16,5 +19,11 @@ struct fig {
 };
 
 void input_ship (int N, struct position *ship);
-struct fig input_triangle ();
-struct position input_port();
+struct fig input_triangle (void);
+struct position input_port(void);
+
+void matrix_of_slopes(int N, struct position *ship, struct fig triangle,
+                      struct position port, float (*slopes)[4]);
+void danger_indification(int N, float (*slopers)[4], int *danger);
+
+#endif

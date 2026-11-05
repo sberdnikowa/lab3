@@ -1,13 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "structures.h"
 
-float slopes[50][4]={};
-int danger[50]={};
 
-struct position input_position() {
+struct position input_position(void) {
     int d, m, s, d1, m1, s1;
-    scanf("%d%d%d%d%d%d", &d, &m, &s, &d1, &m1, &s1);
+    int result = scanf("%d%d%d%d%d%d", &d, &m, &s, &d1, &m1, &s1);
+    if (result != 6) {
+        if (feof(stdin)) {
+            fputs("Недостаточно входных данных.\n", stderr);
+            exit(EXIT_FAILURE);
+        }
+        int ch;
+        while ((ch = getchar()) != '\n' && ch != EOF) {}
+        return (struct position){{-1, 0, 0}, {-1, 0, 0}};
+    }
     struct position x;
     x.lat.degree = d;
     x.lat.minute = m;
@@ -29,27 +37,16 @@ void input_ship(int N, struct position *ship) {
     while (!isInputCorrect) {
         isInputCorrect = 1;
         for (int i = 0; i < N; i++) {
-            int gradus1, mins1, secs1, gradus2, mins2, secs2;
-
-            scanf("%d%d%d%d%d%d", &gradus1, &mins1, &secs1, &gradus2, &mins2, &secs2);
-
-            if (gradus1 < 0 || gradus1 > 90 || mins1 < 0 || mins1 > 60 || secs1 < 0 || secs1 > 60 || gradus2 < 0 || gradus2 > 180 || mins2 < 0 || mins2 > 60 || secs2 < 0 || secs2 > 60) {
+            ship[i] = input_position();
+            if (!check(ship[i])) {
                 isInputCorrect = 0;
-                break;
             }
-
-            ship[i].lat.degree = gradus1;
-            ship[i].lat.minute = mins1;
-            ship[i].lat.second = secs1;
-
-            ship[i].longitude.degree = gradus2;
-            ship[i].longitude.minute = mins2;
-            ship[i].longitude.second = secs2;
         }
-    }    
+        if (!isInputCorrect) fputs("Повторите координаты всех судов.\n", stderr);
+    }
 }
 
-struct fig input_triangle() {
+struct fig input_triangle(void) {
     int isInputCorrect = 0;
 
     struct position x, y, z;
@@ -59,23 +56,25 @@ struct fig input_triangle() {
         x = input_position();
         y = input_position();
         z = input_position();
-        if (check(x) || check(y) || check(z)) {
+        if (!check(x) || !check(y) || !check(z)) {
             isInputCorrect = 0;
+            fputs("Неверные координаты. Повторите ввод.\n", stderr);
         }
     }
     struct fig res = {x, y, z};
     return res;
 }
 
-struct position input_port() {
+struct position input_port(void) {
     int isInputCorrect = 0;
 
     struct position x;
     while (!isInputCorrect) {
         isInputCorrect = 1;
         x = input_position();
-        if (check(x)) {
+        if (!check(x)) {
             isInputCorrect = 0;
+            fputs("Неверные координаты. Повторите ввод.\n", stderr);
         }
     }
     return x;
