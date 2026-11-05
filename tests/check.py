@@ -26,7 +26,6 @@ for name, answers in expected.items():
 for data in ["", "0\n", "51\n", "abc\n", "1\n"]:
     assert run(data).returncode != 0
 
-# После неверного порта вводятся его правильные координаты.
 data = (root / "tests/valencia.txt").read_text()
 retry = data.replace("39 28 31 0 23 22", "91 0 0 0 0 0\n39 28 31 0 23 22")
 assert run(retry).stdout == run(data).stdout
